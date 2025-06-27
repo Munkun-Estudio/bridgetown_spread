@@ -1,0 +1,69 @@
+# Bridgetown & Tailwind: Short-Form Ruleset
+
+1. **Framework & Tailwind**  
+   - Assume Bridgetown v2+ with TailwindCSS.  
+   - Keep Tailwind configuration updated (safelist or JIT for dynamic classes).  
+
+2. **Use ERB for Templates**  
+   - Rely on ERB (Embedded Ruby) for all layouts and pages.  
+   - Avoid mixing other template engines unless absolutely necessary.
+
+3. **Site Structure**  
+   - Place all source content in `src`.  
+   - Organize major folders:
+     - `src/_layouts` for overall page structure
+     - `src/_components` for reusable snippets  
+     - `src/_data` for structured data  
+     - `src/_posts` for date-based content (e.g., blogs)
+   - Keep static files (images, PDFs) in `src` with **no** front matter to copy them verbatim.
+
+4. **Resources & Collections**  
+   - Treat files with front matter as “resources.”  
+   - Configure custom collections in `config/initializers.rb` for distinct content types.
+   - Reserve `_posts` for date-based items only.  
+   - Loop through these resources in templates as needed.
+
+5. **Prototype Pages**  
+   - Use prototype pages to automatically generate archive/index pages from a single template.  
+   - Reference a collection and term (e.g., `tag`, `category`) in front matter to produce multiple pages.
+
+6. **Data & Static Files**  
+   - Store site-wide data in `src/_data`; accessible via `site.data`.
+   - Place large/infrequent files in static folders for verbatim copying.
+   - Use `.rb` data files if dynamic logic is needed while building.
+
+7. **Ruby Components**  
+   - Subclass `Bridgetown::Component` for UI elements or partials.  
+   - Reserve layouts for overall page structure; use components for reusable chunks (navbars, sidebars, cards).  
+   - Encapsulate logic within component classes; separate `.erb` files for rendering.  
+   - Keep components **loosely coupled and focused**, each one encapsulating a specific piece of UI with its styling and JS.
+   - Take advantage of **sidecar** JS/CSS files in `src/_components` (automatically bundled), letting you store a component’s behavior alongside its template.
+
+8. **Defensive Browser Event Handling**  
+   - Never rely on a single event type (e.g., only `DOMContentLoaded`).  
+   - Provide timeouts, polling, or multiple event listeners.  
+   - Maintain functionality even if a particular event fails to fire.
+
+9. **Filters & Syntax**  
+   - Use built-in Bridgetown filters or helpers when possible (e.g., `relative_url`).  
+   - Track when you’re inside ERB vs. Liquid to avoid syntax issues.  
+   - Move advanced logic to a component or helper method if templates get unwieldy.
+
+10. **Plugin Development**  
+   - Store custom Ruby code in `plugins/` or `plugins/builders/`.  
+   - Use the Builder API to generate resources, define tags, or hook events.  
+   - Separate plugin logic by purpose.  
+   - Cache expensive operations (e.g., external API data) to speed up builds.
+
+11. **Build Process & Optimization**  
+   - Use `bridgetown build` or `bridgetown deploy` for production builds.  
+   - Set `BRIDGETOWN_ENV=production` to enable optimizations (asset minification, etc.).  
+   - Optimize asset sizes, especially for images.  
+   - Bundle JS/CSS with esbuild or the default pipeline.  
+   - Check output size and performance continuously.
+
+12. **Internationalization (i18n)**  
+   - Specify `available_locales` and `default_locale` in config.  
+   - Create translation files in `_locales`; use `t` (translate) helper in ERB.  
+   - Provide language switching (e.g., locale selector).  
+   - Decide on separate files per locale or single “multi-locale” files depending on requirements.
